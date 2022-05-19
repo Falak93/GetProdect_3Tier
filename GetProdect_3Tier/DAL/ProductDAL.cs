@@ -9,45 +9,51 @@ using System.Threading.Tasks;
 
 namespace GetProdect_3Tier.DAL
 {
-
-    internal class ProductDAL
+    public static class ProductDAL
     {
-        private static string connectionString = "Server=DESKTOP-29SJ1T7; database=GetProduct; Integrated Security=true";
-
-        private static readonly SqlConnection connection = new SqlConnection(connectionString);
+        private static SqlConnection connection = new SqlConnection("server=DESKTOP-29SJ1T7; database=GetPro; Integrated Security=true");
         public static void CreateProdect(Product product)
         {
-            string commandText = $"Insert into GProduct values('{product.ProductName}', '{product.Design}'," +
-              $" {product.Color}, {product.ProductID} )";
+            string commandText = String.Format("Insert into Gproducts(ProductName,Design,Color)" +
+                "values('{0}','{1}','{2}')", product.ProductName, product.Design, product.Color);
             SqlCommand command = new SqlCommand(commandText, connection);
 
             connection.Open();
             command.ExecuteNonQuery();
             connection.Close();
+          
         }
-
         public static void UpdateProdect(Product product)
         {
 
-            string commandText = $"Update GProduct Set " +
-              $"ProductName = '{product.ProductName}', " +
-              $"Design = '{product.Design}', " +
-              $"Color = '{product.Color}', " +
-              $"ProductID = {product.ProductID} " +
-              $"where ProductID = {product.ProductID}";
+            string commandText = string.Format("Update Gproducts set ProductName='{1}',Design='{2}',Color='{3}'" + "where ProductID ={0}"
+                 , product.ProductID, product.ProductName, product.Design, product.Color);
+
+            SqlCommand cmd = new SqlCommand(commandText, connection);
+
+            connection.Open();
+            cmd.ExecuteNonQuery();
+            connection.Close();
+
+        }
+       
+        public static void DeleteProdect(Product product)
+        {
+
+            string commandText = String.Format("Delete from Gproducts where ProductID = {0}", product.ProductID);
 
             SqlCommand command = new SqlCommand(commandText, connection);
 
             connection.Open();
             command.ExecuteNonQuery();
             connection.Close();
-
+          
         }
         public static DataTable GetAllProduct()
         {
-            string command = String.Format("Select * from Gproducts");
+           // string command = String.Format();
 
-            SqlCommand sqlCommand = new SqlCommand(command, connection);
+            SqlCommand sqlCommand = new SqlCommand("Select * from Gproducts", connection);
 
             SqlDataAdapter da = new SqlDataAdapter(sqlCommand);
 
@@ -57,45 +63,5 @@ namespace GetProdect_3Tier.DAL
 
             return dt;
         }
-        public static Product GetProductById(int ProductID)
-        {
-            Product product = new Product();
-
-            string commandText = $"Select * from  GProduct where ProductID={ProductID}";
-            SqlCommand command = new SqlCommand(commandText, connection);
-
-            connection.Open();
-
-            SqlDataReader ProductReader = command.ExecuteReader();
-
-            if (ProductReader.HasRows)
-            {
-                while (ProductReader.Read())
-                {
-                   product.ProductID= ProductReader.GetInt32(0);
-                   product.ProductName = ProductReader.GetString(1);
-                    product.Design = ProductReader.GetString(2);
-                    product.Color = ProductReader.GetString(3);
-                   
-                }
-            }
-
-            connection.Close();
-            return product;
-
-        }
-
-        public static void DeleteProdect(Product product)
-        {
-
-            string commandText = $"Delete from GProduct where ProdectID = {product.ProductID}";
-
-            SqlCommand command = new SqlCommand(commandText, connection);
-
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
-        }
-
     }
 }
