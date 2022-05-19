@@ -22,6 +22,7 @@ namespace GetProdect_3Tier
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+            txtProductID.Enabled=false;
             dataGridView1.DataSource = ProductDAL.GetAllProduct();
             clearform();
         }
@@ -69,6 +70,7 @@ namespace GetProdect_3Tier
             txtColor.Text = "";
             txtDesign.Text = "";
             txtProdectName.Text = "";
+            txtProductID.Text = "";
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -83,6 +85,7 @@ namespace GetProdect_3Tier
             currentproduct.Design = row.Cells[2].Value.ToString();
             currentproduct.Color = row.Cells[3].Value.ToString();
 
+            txtProductID.Text = currentproduct.ProductID.ToString();
             txtProdectName.Text = currentproduct.ProductName;
             txtDesign.Text = currentproduct.Design;
             txtColor.Text = currentproduct.Color;
